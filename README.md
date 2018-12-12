@@ -23,7 +23,7 @@
   - 商家ID，密码（加密），商家名，身份属性，平均分数(int)。 
 - 订单：
 
-  - 订单ID(varchar(16))，时间(date)，金额(real)，商家联系表ID(varchar(20))，用户联系表ID(varchar(20))，订单状态(varchar(10))，配送费(real)。
+  - 订单ID(varchar(16))，时间(date)，金额(real)，商家联系表ID(varchar(16))，用户联系表ID(varchar(16))，订单状态(varchar(10))，配送费(real)。
 - 商品：
 
   - 商品ID(varchar(16))，商品名字(nvarchar(20))，金额(real)，销售量(int)，comment(nvarchar(50))。

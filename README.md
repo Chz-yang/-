@@ -20,7 +20,7 @@
   - 用户ID(varchar(20))，密码（加密）(int)，用户名(nvarchar(20))，身份属性(boolean)。
 - 商家：
 
-  - 商家ID，密码（加密），商家名，身份属性，平均分数(int)。 
+  - 商家ID，密码（加密），商家名，身份属性，平均分数(numeric(2, 1))。 
 - 订单：
 
   - 订单ID(varchar(16))，时间(date)，金额(real)，商家联系表ID(varchar(16))，用户联系表ID(varchar(16))，订单状态(varchar(10))，配送费(real)。
@@ -31,7 +31,7 @@
 
   - 联系表ID(varchar(16))，电话(char(11))，地址(nvarchar(50))，收件人名字(nvarchar(20))。
 - 骑手：
-  - 骑手ID(varchar(16))，骑手名字(nvarchar(20))，电话(char(11))，平均分数(int)。
+  - 骑手ID(varchar(16))，骑手名字(nvarchar(20))，电话(char(11))，平均分数(numeric(2,  1))。
 - 评价：
   - 订单ID（外码）(varchar(16))，骑手分数(int)，商家分数(int)，comment(nvarchar(50))。
 
@@ -60,3 +60,23 @@ E-R图：
 模式图：
 
 ![模式图](image/美团外卖模式图.png)
+
+---
+
+用户自定义完整性：
+
+* 属性约束
+  * Customer.identity_type = 1
+  * Supplier.identity_type = 0
+
+* 触发器
+
+  * TRI_Comment_Score_INSERT
+
+    Supplier.avg_score = SUM(Comments.supplier_score) / COUNT(Comments.order_id)
+
+    Rider.avg_score = SUM(Comments.rider_score) / COUNT(Comments.order_id)
+
+  * TRI_Orders_Dishes_INSERT
+
+    Orders.totalprice = SUM(Dishes.retailprice) + Orders.distribution_cost

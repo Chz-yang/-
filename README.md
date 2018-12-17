@@ -74,6 +74,7 @@ E-R图：
 * 属性约束
   * Customer.identity_type = 1
   * Supplier.identity_type = 0
+  * Orders.state in ('to_do', 'to_deliver', 'delivering', 'done') && Orders.state != null
 
 * 触发器
 

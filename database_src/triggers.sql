@@ -1,3 +1,13 @@
+USE TakeOut;
+GO
+
+if (OBJECT_ID('TRI_Comment_Score_INSERT', 'tr') is not null)
+    DROP TRIGGER TRI_Comment_Score_INSERT;
+if (OBJECT_ID('TRI_Orders_Dishes_INSERT', 'tr') is not null)
+    DROP TRIGGER TRI_Orders_Dishes_INSERT;
+GO
+
+
 CREATE TRIGGER TRI_Comment_Score_INSERT
 ON Comments
     AFTER INSERT
@@ -38,7 +48,7 @@ BEGIN
     FROM inserted i, Orders_Dishes OD, Dishes D
     WHERE i.order_id = OD.order_id and OD.dishes_id = D.dishes_id;
     UPDATE Orders
-    SET totalprice = @dishes_totalprice + distribution_cost
+    SET totalprice = @dishes_totalprice + O.distribution_cost
     FROM Orders O, inserted i
     WHERE O.order_id = i.order_id;
 END

@@ -2,7 +2,7 @@
 --DBMS: SQL server
 
 ----# create new data base: TakeOut
---create database TakeOut
+create database TakeOut
 
 --use database
 use TakeOut

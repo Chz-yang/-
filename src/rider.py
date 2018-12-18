@@ -38,7 +38,7 @@ class Rider():
     def activity(self):
         print(">> Please input your option. ")
         while True:
-            option = input(">> 'c' for check; 'd' for deliver; 'f' for finish; ‘r' for remind; 'n for do not remind; ''q' for quit\n>> ")
+            option = input(">> 'c' for check; 'd' for deliver; 'f' for finish; 'r' for remind; 'n' for do not remind; 'q' for quit\n>> ")
             if option == 'c':
                 if len(self.ordersToDeliver.keys()) == 0:
                     print(">> There are no new orders now. ")
@@ -61,8 +61,6 @@ class Rider():
                 if order_id not in self.ordersToDeliver.keys():
                     print(">> Sorry, there is not such order to deliver. ")
                 else:
-                    # self.cursor.execute("")
-                    # self.cursor.commit()
                     try:
                         self.cursor.execute("declare @success int; EXEC Proc_Deliver " + order_id + ", " + self.id + ", @success output; create table Temp(success int primary key);insert into Temp values(@success)")
                         self.cursor.commit()
@@ -90,7 +88,7 @@ class Rider():
                 self.remind = True  # 接收提醒
                 break
             elif option == 'n':
-                self.remind = False  # 不接受提醒
+                self.remind = False # 不接收提醒
                 break
             elif option == 'q':
                 self.quit = True    # 退出程序
@@ -109,9 +107,11 @@ if __name__ == '__main__':
                 print(">> Welcome back. ")
                 break
             else:
-                print(">> Wrong id or wrong password. ")
+                print(">> Wrong Password! ")
+        except IndexError:
+            print(">> Nonexistent ID! ")
         except ValueError:
-            continue
+            print(">> Wrong Password! ")    # 如果保证密码哈希值为整数就不需要捕获这一异常
 
     rider = Rider(rider_id, password, cursor)
     t = threading.Thread(target=rider.getOrdersMessage) # 辅助线程

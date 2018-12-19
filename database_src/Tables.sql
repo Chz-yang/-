@@ -2,7 +2,7 @@
 --DBMS: SQL server
 
 ----# create new data base: TakeOut
-create database TakeOut
+--create database TakeOut
 
 --use database
 use TakeOut
@@ -10,7 +10,7 @@ use TakeOut
 ----# create Customer table
 create table Customer(
 	cust_id varchar(20) primary key,
-	password int,
+	password char(40),
 	name nvarchar(20),
 	identity_type int default 1
 );
@@ -33,7 +33,7 @@ create table Cust_Contact(
 ----# create supplier table
 create table Supplier(
 	supp_id varchar(20) primary key,
-	passsword int,
+	passsword char(40),
 	name nvarchar(20),
 	identity_type int default 0,
 	avg_score numeric(2, 1)
@@ -106,7 +106,7 @@ create table Cust_Orders(
 ----# create riders table
 create table Rider(
 	rider_id varchar(16) primary key,
-	password int,
+	password char(40),
 	name nvarchar(20),
 	telephone_no char(11),
 	avg_score numeric(2, 1),

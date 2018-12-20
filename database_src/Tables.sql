@@ -1,6 +1,9 @@
 --this file is used to create TakeOut database and its tables
 --DBMS: SQL server
 
+USE master
+DROP DATABASE TakeOut
+
 ----# create new data base: TakeOut
 create database TakeOut
 
@@ -10,7 +13,7 @@ use TakeOut
 ----# create Customer table
 create table Customer(
 	cust_id varchar(20) primary key,
-	password int,
+	password char(40),
 	name nvarchar(20),
 	identity_type int default 1
 );
@@ -33,7 +36,7 @@ create table Cust_Contact(
 ----# create supplier table
 create table Supplier(
 	supp_id varchar(20) primary key,
-	passsword int,
+	password char(40),
 	name nvarchar(20),
 	identity_type int default 0,
 	avg_score numeric(2, 1)

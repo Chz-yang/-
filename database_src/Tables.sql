@@ -5,7 +5,7 @@ USE master
 DROP DATABASE TakeOut
 
 ----# create new data base: TakeOut
-create database TakeOut
+--create database TakeOut
 
 --use database
 use TakeOut
@@ -72,8 +72,9 @@ create table Orders(
 	totalprice real,
 	supp_contact_id varchar(16) references Contact(contact_id),
 	cust_contact_id varchar(16) references Contact(contact_id),
-	state varchar(10),
+	state varchar(10) not null,
 	distribution_cost real,
+	check(state in ('to_do', 'to_deliver', 'delivering', 'done'))
 );
 
 ----# create contact table between orders and dishes
@@ -108,6 +109,7 @@ create table Cust_Orders(
 ----# create riders table
 create table Rider(
 	rider_id varchar(16) primary key,
+	password char(40),
 	name nvarchar(20),
 	telephone_no char(11),
 	avg_score numeric(2, 1),

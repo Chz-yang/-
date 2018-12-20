@@ -17,7 +17,7 @@
 
 - 用户：
 
-  - 用户ID(varchar(20))，密码（加密）(int)，用户名(nvarchar(20))，身份属性(boolean)。
+  - 用户ID(varchar(20))，密码（加密）(char(40))，用户名(nvarchar(20))，身份属性(int)。
 - 商家：
 
   - 商家ID，密码（加密），商家名，身份属性，平均分数(numeric(2, 1))。 
@@ -31,7 +31,7 @@
 
   - 联系表ID(varchar(16))，电话(char(11))，地址(nvarchar(50))，收件人名字(nvarchar(20))。
 - 骑手：
-  - 骑手ID(varchar(16))，骑手名字(nvarchar(20))，电话(char(11))，平均分数(numeric(2,  1))。
+  - 骑手ID(varchar(16))，密码(加密)，骑手名字(nvarchar(20))，电话(char(11))，平均分数)。
 - 评价：
   - 订单ID（外码）(varchar(16))，骑手分数(int)，商家分数(int)，comment(nvarchar(50))。
 
@@ -74,6 +74,7 @@ E-R图：
 * 属性约束
   * Customer.identity_type = 1
   * Supplier.identity_type = 0
+  * Orders.state in ('to_do', 'to_deliver', 'delivering', 'done') && Orders.state != null
 
 * 触发器
 

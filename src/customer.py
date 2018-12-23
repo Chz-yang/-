@@ -153,6 +153,28 @@ class Customer():
             distribution_cost = str(order[6])
             print(str(index) + ". 时间：" + date + "，联系人：" + str(contact[-1]) + "，总价：" + str(total_price) + "，配送费：" + str(distribution_cost) + "，状态：" + Customer.stateMap(state) + "。")
             index += 1
+        print("\n***************************************")
+        print("********** 1：评价订单     ************")
+        print("********** q：返回上一层   ************")
+        valid_input = ['1', 'q']
+        choice = input("请输入你的选项：")
+        while (choice not in valid_input):
+            choice = input("输入非法，请重新输入：")
+        if (choice == '1'):
+            print("\n***************************************")
+            choice = input("请输入你要进行评价的订单：")
+            if (choice.isalnum() == False or int(choice) >= len(orders)):
+                choice = input("所选订单不存在，请重新输入：")
+            order = orders[int(choice)]
+            supp_score = float(input("请给商家打分："))
+            rider_score = float(input("请给骑手打分："))
+            comments = input("是否需要进行评论（是：直接输入评论内容；否：输入小写“n”并按回车）：")
+            if (comments == 'n'):
+                comments = "空"
+            db = Database()
+            db.execute("INSERT INTO Comments VALUES(\'" + str(order[0]) + "\', " + str(rider_score) + "\', \'" + str(supp_score) + "\', \'" + comments + "\')")
+            db.commit()
+            print("评价成功！")
         self.showMenu()
 
     def dealWithRequestSetting(self):
@@ -203,19 +225,6 @@ class Customer():
         elif (choice == 'q'):
             self.showMenu()
 
-
-    @staticmethod
-    def stateMap(state):
-        'to_do', 'to_deliver', 'delivering', 'done'
-        if (state == "to_do"):
-            return "待接单"
-        elif (state == "to_deliver"):
-            return "待配送"
-        elif (state == "delivering"):
-            return "配送中"
-        elif (state == "done"):
-            return "已完成"
-
     def addContacts(self):
         db = Database()
         contact_id = len(db.query("SELECT * FROM Contact")) + 1
@@ -240,9 +249,17 @@ class Customer():
             db.execute("INSERT INTO Orders_Dishes VALUES(" + str(order_id) + ", " + str(dish[0]))
         db.commit(0)
 
-    def showOrders(self):
-        db = Database()
-        db.query()
+    @staticmethod
+    def stateMap(state):
+        'to_do', 'to_deliver', 'delivering', 'done'
+        if (state == "to_do"):
+            return "待接单"
+        elif (state == "to_deliver"):
+            return "待配送"
+        elif (state == "delivering"):
+            return "配送中"
+        elif (state == "done"):
+            return "已完成"
 
     @staticmethod
     def getSupplierDishes(supp_id):

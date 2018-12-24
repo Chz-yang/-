@@ -20,8 +20,8 @@ class Supplier():
     def activity(self):
         print(">> Please input your option. ")
         while True:
-            option = input("\n>> 'c' to check Orders; 'd' to add dishes\n"
-                           ">>  'a' to add contact; 'q' to quit: ")
+            option = input("\n>> 处理订单请按 c， 添加菜式请按 d\n"
+                           ">> 添加地址请按 a， 退出请按 q: ")
             if option == 'c':  # check orders
                 self.handleOrders()
 
@@ -40,7 +40,7 @@ class Supplier():
         ''' handle orders to to delivering '''
         self.lock.acquire()
         if len(self.todoOrders) == 0:
-            print("\n>> There is no order to handle now.")
+            print("\n>> 暂时没有订单需要处理！")
         else:
             for orders in self.todoOrders:
                 self.cursor.execute('''
@@ -57,9 +57,9 @@ class Supplier():
         self.showDishes()
 
         while True:
-            choice = input("\n>> 'a' to add new dishes; 'q' to quit:")
+            choice = input("\n>> 添加菜式请按：a; 退出请按 q :")
             if choice == 'a':
-                features = ["dishes name", "retail price", "comment"]  # 输入属性
+                features = ["菜名", "零售价", "备注"]  # 输入属性
                 values = [None, None, None]  # 输入值(密码、姓名、电话号码)
                 no = 0  # 输入顺序
                 while no < 3:
@@ -75,7 +75,7 @@ class Supplier():
                 count = cursor.fetchone()
                 dishes_id = str(count[0]) # 假设contact ID从0开始
 
-                print(dishes_id, values[0], float(values[1]), 0, values[2])
+                # print(dishes_id, values[0], float(values[1]), 0, values[2])
                 self.cursor.execute('''
                                     insert into Dishes values
                                     (?, ?, ?, 0, ?)''',
@@ -86,6 +86,7 @@ class Supplier():
                                     insert into Supp_Dishes values
                                     (?, ?)''', self.id, dishes_id)
                 self.cursor.commit()
+                print('>> 菜式', values[0], '已插入！')
 
             elif choice == 'q':
                 return
@@ -93,9 +94,9 @@ class Supplier():
     def addContact(self):
         self.showContact()
         while True:
-            choice = input("\n>> 'a' to add new contact; 'q' to quit:")
+            choice = input("\n>> 添加联系表请按 a; 退出请按 q:")
             if choice == 'a':
-                features = ["telephone", "address", "reciver_name"]  # 输入属性
+                features = ["电话", "地址", "联系人"]  # 输入属性
                 values = [None, None, None]  # 输入值(密码、姓名、电话号码)
                 no = 0  # 输入顺序
                 while no < 3:
@@ -136,11 +137,11 @@ class Supplier():
                                 where supp_id = ?)''', self.id)
         dishes = self.cursor.fetchall()
         if len(dishes) == 0:
-            print("\n>> You don't have any dishes now!")
+            print("\n>> 您的商店目前没有菜式!")
         else:
-            print('\n>> Here are you current Dishes:')
+            print('\n>> 您当前的菜式如下:')
             for dish in dishes:
-                print('>>> dish name:', dish[1], ', price:', dish[2], ', sales:', dish[3], ', comments:', dish[4])
+                print('>>> 菜名:', dish[1], ', 零售价:', dish[2], ', 销量:', dish[3], ', 备注:', dish[4])
 
     def showContact(self):
         ''' show current contact '''
@@ -154,11 +155,11 @@ class Supplier():
                                 where supp_id = ?)''', self.id)
         contacts = self.cursor.fetchall()
         if len(contacts) == 0:
-            print("\n>> You don't have any contact now!")
+            print("\n>> 您目前还没有联系表!")
         else:
-            print('\n>> Here are you current contact:')
+            print('\n>> 您当前的联系表如下:')
             for contact in contacts:
-                print('>>> tele:', contact[1], ', addr:', contact[2], ', recvName:', contact[3])
+                print('>>> 电话:', contact[1], ', 地址:', contact[2], ', 收件人:', contact[3])
 
     def checkOrders(self):
         ''' check orders per 10 seconds '''
@@ -166,7 +167,7 @@ class Supplier():
             time.sleep(5)
             if self.quit is True:
                 return
-            print('check orders')
+            # print('check orders')
             self.cursor.execute('''
                                 select *
                                 from Supp_Orders, Orders
@@ -182,8 +183,8 @@ def validInput(feature, no):
     '''
     输入属性feature的合法值，序号（顺序）为no
     '''
-    msg1 = ">> Please input your " + feature + ". Or input 'q' for quit.\n>> "
-    msg2 = ">> Your " + feature + " cannot be empty."
+    msg1 = ">> 请输入 " + feature + "， 想要退出请按 q.\n>> "
+    msg2 = ">> 你的 " + feature + " 不能为空."
 
     while True:
         value = input(msg1)
@@ -199,28 +200,28 @@ if __name__ == '__main__':
     login = False   # 登录状态
     while not login:
         try:
-            option = input(">> Please input 1 for login or 2 for register or 3 for quit.\n>> ")
+            option = input(">> 登录请按 1， 注册请按 2，退出请按 3。\n>> ")
             if option == '1':                
-                supp_id = input(">> Please input your id:\n>> ")
-                password = input(">> Please input your password.\n>> ")
+                supp_id = input(">> 请输入您的id:\n>> ")
+                password = input(">> 请输入您的密码\n>> ")
                 sha1 = hashlib.sha1()
                 sha1.update(password.encode('utf-8'))
                 hash_pwd = sha1.hexdigest() # 密码的哈希值
                 cursor.execute("SELECT password FROM Supplier WHERE Supplier.supp_id = " + supp_id)
                 if cursor.fetchall()[0][0] == hash_pwd:
-                    print(">> Welcome back. ")
+                    print(">> 欢迎回来~ ")
                     login = True
                 else:
-                    print(">> Wrong Password! ")
+                    print(">> 密码错误！ ")
 
             elif option == '2':
                 cursor.execute("SELECT count(*) FROM Supplier")
                 count = cursor.fetchone()
                 supp_id = str(count[0]) # 假设ID从0开始
                 # print(supp_id, type(supp_id))
-                print(">> Your new ID is: " + supp_id)
+                print(">> 您的id为: " + supp_id)
 
-                features = ["password", "name"] #输入属性
+                features = ["密码", "姓名"] #输入属性
                 values = [None, None] # 输入值(密码、姓名、电话号码)
                 no = 0  # 输入顺序
                 while no < 2:
@@ -241,23 +242,23 @@ if __name__ == '__main__':
                                     (?, ?, ?, 0, ?)
                                    ''', supp_id, hash_pwd, values[1], 5)
                     cursor.commit()
-                    print(">> Success. Please remember your ID: " + supp_id + " and password: " + values[0])    # 创建成功
+                    print(">> 注册成功. 请记住您的id: " + supp_id + " ，密码: " + values[0])    # 创建成功
                     login = True
                 except Exception as e:
                     print(e)
-                    print(">> Fail to register. Please try again. ")  # 创建失败
+                    print(">> 注册失败，请重试！ ")  # 创建失败
             elif option == '3':
                 exit()
                     
         except IndexError:
-            print(">> Nonexistent ID! ")
+            print(">> 账号不存在！ ")
 
     suppl = Supplier(supp_id, cursor)
     t = threading.Thread(target=suppl.checkOrders)
     t.start()
     while True:
         if not suppl.activity():    # 主线程
-            print("\n>> See you next time. ")
+            print("\n>> 感谢使用！再见~. ")
             t.join()
-            print('bye')
+            # print('bye')
             exit()

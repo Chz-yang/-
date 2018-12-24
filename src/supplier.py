@@ -18,7 +18,7 @@ class Supplier():
         self.todoOrders = {}
 
     def activity(self):
-        print(">> Please input your option. ")
+        print(">> 请做出选择： ")
         while True:
             option = input("\n>> 处理订单请按 c， 添加菜式请按 d\n"
                            ">> 添加地址请按 a， 退出请按 q: ")
@@ -43,9 +43,12 @@ class Supplier():
             print("\n>> 暂时没有订单需要处理！")
         else:
             for orders in self.todoOrders:
-                self.cursor.execute('''
-                                    UPDATE Orders set Orders.state ='to_delivering'
-                                    where Orders.order_id =  ''', orders[0])
+                # print(orders, orders[0], type(orders[0]))
+                self.cursor.execute("UPDATE Orders set Orders.state = 'to_deliver' where Orders.order_id = " + orders[0])
+                print('>> 处理订单', orders, '成功，订单待派送！')
+                # self.cursor.execute('''
+                #                     UPDATE Orders set Orders.state ='to_delivering'
+                #                     where Orders.order_id = ? ''', orders[0])
                 self.cursor.commit()
             self.todoOrders = []
 
@@ -122,6 +125,7 @@ class Supplier():
                                     insert into Supp_Contact values
                                     (?, ?)''', self.id, contact_id)
                 self.cursor.commit()
+                print('>> 插入联系表成功！')
 
             elif choice == 'q':
                 return
@@ -164,7 +168,6 @@ class Supplier():
     def checkOrders(self):
         ''' check orders per 10 seconds '''
         while True:
-            time.sleep(5)
             if self.quit is True:
                 return
             # print('check orders')
@@ -177,6 +180,7 @@ class Supplier():
             self.lock.acquire()
             self.todoOrders = self.cursor.fetchall()
             self.lock.release()
+            time.sleep(5)
 
 
 def validInput(feature, no):

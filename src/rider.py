@@ -108,11 +108,11 @@ def validInput(feature, no):
     输入属性feature的合法值，序号（顺序）为no
     '''
     if no > 0:
-        msg1 = ">> Please input your " + feature + ". Or input 'b' for backward or 'q' for quit.\n>> "
-        msg2 = ">> Your " + feature + "cannot be empty."
+        msg1 = ">> 请输入您的" + feature + "。或者输入  'b'：回退一步；'q'：退出系统\n>> "
+        msg2 = ">> 您的" + feature + "不能为空"
     elif no == 0:
-        msg1 = ">> Please input your " + feature + ". Or input 'q' for quit.\n>> "
-        msg2 = ">> Your " + feature + " cannot be empty."
+        msg1 = ">> 请输入您的" + feature + "。或者输入  'q'：退出系统.\n>> "
+        msg2 = ">> 您的" + feature + "不能为空。"
 
     while True:
         value = input(msg1)
@@ -171,10 +171,11 @@ if __name__ == '__main__':
                 #     else:
                 #         break
                 features = ["password", "name", "telephone number"] #输入属性
+                featuresChinese = ["密码", "名字", "电话号码"]
                 values = [None, None, None] # 输入值(密码、姓名、电话号码)
                 no = 0  # 输入顺序
                 while no < 3:
-                    values[no] = validInput(features[no], no)
+                    values[no] = validInput(featuresChinese[no], no)
                     if values[no] == 'b': # 回退到上一步
                         no = no - 1
                     elif values[no] == 'q':   # 退出程序
@@ -189,7 +190,8 @@ if __name__ == '__main__':
                     sql = "INSERT INTO Rider VALUES(\'" + rider_id + "\', \'" + hash_pwd + "\', \'" + values[1] + "\', \'" + values[2] + "\', 5);"
                     cursor.execute(sql)
                     cursor.commit()
-                    print(">> 成功。请记住您的账户ID：" + rider_id + " ；密码：" + values[0])    # 创建成功
+                    print(">> 成功。请记住您的账户ID：" + rider_id + " ；密码：" + values[0])  # 创建成功
+                    password = values[0]
                     login = True
                 except Exception as e:
                     print(e)

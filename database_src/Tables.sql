@@ -1,13 +1,11 @@
 --this file is used to create TakeOut database and its tables
 --DBMS: SQL server
 
-USE master
-DROP DATABASE TakeOut
-
 ----# create new data base: TakeOut
 --create database TakeOut
 
 --use database
+
 use TakeOut
 
 ----# create Customer table
@@ -121,3 +119,4 @@ create table Rider_Orders(
 	order_id varchar(16) references Orders(order_id),
 	primary key(rider_id, order_id)
 );
+

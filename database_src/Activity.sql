@@ -1,20 +1,20 @@
-use TakeOut;
+ï»¿use TakeOut;
 go
 /*
 insert into Customer
-values(0, 12345, 'Ñî³ÂÔó', 1);
+values(0, 12345, 'æ¨é™ˆæ³½', 1);
 
 insert into Supplier
-values(0, 12345, 'ÑîîñÕÂ', 0, 5);
+values(0, 12345, 'æ¨é“–ç« ', 0, 5);
 
 insert into Dishes
-values(0, 'ºìÉÕÒ¶¹ãÖÇ', 10, 0, 'É«ÏãÎ¶¾ãÈ«');
+values(0, 'çº¢çƒ§å¶å¹¿æ™º', 10, 0, 'è‰²é¦™å‘³ä¿±å…¨');
 
 insert into Contact
-values(0, '15626229847', 'Ğ¡¹ÈÎ§', 'ÖÓ·²±¼');
+values(0, '15626229847', 'å°è°·å›´', 'é’Ÿå‡¡å¥”');
 
 insert into Contact
-values(1, '15626229847', 'Ğ¡¹ÈÎ§', 'ÖÓ·²±¼');
+values(1, '15626229847', 'å°è°·å›´', 'é’Ÿå‡¡å¥”');
 
 insert into Orders
 values(0, '2018-12-17', 10, 0, 1, 'to_deliver', 1);

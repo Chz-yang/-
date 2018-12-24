@@ -40,14 +40,15 @@ class Supplier():
         ''' handle orders to to delivering '''
         self.lock.acquire()
         if len(self.todoOrders) == 0:
-            print("\n>> There are no orders to handle now.")
+            print("\n>> There is no order to handle now.")
         else:
-            for order_id in self.todoOrders:
+            for orders in self.todoOrders:
                 self.cursor.execute('''
                                     UPDATE Orders set Orders.state ='to_delivering'
-                                    where Orders.order_id =  ''', order_id[0])
+                                    where Orders.order_id =  ''', orders[0])
                 self.cursor.commit()
-            
+            self.todoOrders = []
+
         self.lock.release()
         pass
 
@@ -74,10 +75,11 @@ class Supplier():
                 count = cursor.fetchone()
                 dishes_id = str(count[0]) # 假设contact ID从0开始
 
+                print(dishes_id, values[0], float(values[1]), 0, values[2])
                 self.cursor.execute('''
                                     insert into Dishes values
-                                    (?, ?, ?, ?)''',
-                                    dishes_id, values[0], values[1], 0, values[2])
+                                    (?, ?, ?, 0, ?)''',
+                                    dishes_id, values[0], float(values[1]), values[2])
                 self.cursor.commit()
 
                 self.cursor.execute('''
@@ -128,7 +130,7 @@ class Supplier():
         self.cursor.execute('''
                             select *
                             from Dishes
-                            where contact_id in
+                            where dishes_id in
                                 (select dishes_id
                                 from Supp_Dishes
                                 where supp_id = ?)''', self.id)
@@ -138,7 +140,7 @@ class Supplier():
         else:
             print('\n>> Here are you current Dishes:')
             for dish in dishes:
-                print('>>> dish name:', dish[1], 'price:', dish[2], 'sales:', dish[3], 'comments:', dish[4])
+                print('>>> dish name:', dish[1], ', price:', dish[2], ', sales:', dish[3], ', comments:', dish[4])
 
     def showContact(self):
         ''' show current contact '''
@@ -156,7 +158,7 @@ class Supplier():
         else:
             print('\n>> Here are you current contact:')
             for contact in contacts:
-                print('>>> tele:', contact[1], 'addr:', contact[2], 'recvName:', contact[3])
+                print('>>> tele:', contact[1], ', addr:', contact[2], ', recvName:', contact[3])
 
     def checkOrders(self):
         ''' check orders per 10 seconds '''
@@ -167,7 +169,7 @@ class Supplier():
                                 from Supp_Orders, Orders
                                 where  Supp_Orders.supp_id = ? and
                                        Supp_Orders.order_id = Orders.order_id and
-                                       Orders.state = ?''', self.id, 'to_do')
+                                       Orders.state = 'to_do' ''', self.id)
             self.lock.acquire()
             self.todoOrders = self.cursor.fetchall()
             self.lock.release()

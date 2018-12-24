@@ -4,10 +4,7 @@ import string
 
 class Database():
     def __init__(self):
-        self.conn = pyodbc.connect(
-                                   'DRIVER={ODBC Driver 17 for SQL Server};\
-                                    SERVER=127.0.0.1;port=1433;\
-                                    DATABASE=TakeOut;UID=sa;PWD=Yy7758258')
+        self.conn = pyodbc.connect('DSN=project; DATABASE=TakeOut; UID=sa; PWD=123456')  # 连接服务器
         self.cursor = self.conn.cursor()
     
     def execute(self, sentence):
@@ -62,13 +59,13 @@ class Customer():
         print("***************************************\n")
         print("请选择需要查看商家的所有菜式（'q'：返回上一层）：")
         choice = input()
-        while (choice != 'q' and choice.isalnum() == False and int(choice) >= len(suppliers)):
+        while (choice != 'q' and choice.isalnum() == False and int(choice) > len(suppliers)):
             print("输入非法，请重新输入: ", end="")
             choice = input()
         if (choice == 'q'):
             self.showMenu()
             return
-        supplier = suppliers[int(choice)]
+        supplier = suppliers[int(choice) - 1]
         print("\n***************************************")
         dishes = Customer.getSupplierDishes(supplier[0])
         print("\"" + supplier[1] + "\"商家一共有" + str(len(dishes)) + "款菜式：")
@@ -77,15 +74,15 @@ class Customer():
             print(str(index) + ". 名字：" + dish[1] + "，单价：" + str(dish[1]) + "，销售量：" + str(dish[3]) + "，描述：" + dish[4])
             index += 1
         order_dishes = []
-        choice == '2'
+        choice = '2'
         while (choice == '2'):
             print("***************************************")
             print("请选择你想要订购的快餐（%d 到 %d）：" % (1, index  -1))
             choice = input()
             while (choice.isalnum() == False or int(choice) >= index):
                 choice = input("你所选快餐不存在，请检查并重新输入：")
-            order_dishes.append(dishes[int(choice)])
-            print("添加 \"" + dishes[int(choice)][2] + "\" 成功！")
+            order_dishes.append(dishes[int(choice) - 1])
+            print("添加 \"" + dishes[int(choice) - 1][2] + "\" 成功！")
             print("***************************************")
             print("************* 1：结账    **************")
             print("************* 2：继续添加 **************")
@@ -108,7 +105,7 @@ class Customer():
                 choice = input("请选择配送地址：")
                 while (choice.isalnum() == False or int(choice) >= index):
                     choice = input("输入非法，请重新输入：")
-                contact = contacts[int(choice)]
+                contact = contacts[int(choice) - 1]
                 print("\n***************************************")
                 print("你一共选购了" + str(len(order_dishes)) + "样快餐：")
                 index = 1
@@ -163,9 +160,9 @@ class Customer():
         if (choice == '1'):
             print("\n***************************************")
             choice = input("请输入你要进行评价的订单：")
-            if (choice.isalnum() == False or int(choice) >= len(orders)):
+            if (choice.isalnum() == False or int(choice) > len(orders)):
                 choice = input("所选订单不存在，请重新输入：")
-            order = orders[int(choice)]
+            order = orders[int(choice) - 1]
             supp_score = float(input("请给商家打分："))
             rider_score = float(input("请给骑手打分："))
             comments = input("是否需要进行评论（是：直接输入评论内容；否：输入小写“n”并按回车）：")
@@ -302,18 +299,18 @@ class Customer():
 
 if __name__ == "__main__":
     print("***************************************")
-    print("*************** O: 注册 ***************")
-    print("*************** 1: 登录 ***************")
+    print("*************** 1: 注册 ***************")
+    print("*************** 2: 登录 ***************")
     print("*************** q: 退出 ***************")
     print("***************************************")
     print("请输入您的选项: ", end="")
     choice = input()
-    while (choice != '0' and choice != '1' and choice != 'q'):
+    while (choice != '1' and choice != '2' and choice != 'q'):
         print("输入非法，请重新输入: ", end="")
         choice = input()
     
     # register
-    if (choice == '0'):
+    if (choice == '1'):
         id = input("请输入您的注册ID（只能使用数字和字母）: ")
         while (Customer.isValidIdFormat(id) == False):
             id = input("注册ID不合法或者已存在，请重新输入: ")
@@ -322,7 +319,7 @@ if __name__ == "__main__":
         name = input("请输入您的账号名称: ")
         Customer.addNewCustomer(id, password_hash, name)
     # login
-    elif (choice == '1'):
+    elif (choice == '2'):
         id = input("请输入您的登录ID：")
         while (Customer.isValidIdInDatabase(id) == False):
             id = input("对不起，该ID不存在，请检查并重新输入：")
@@ -331,14 +328,14 @@ if __name__ == "__main__":
         while (Customer.isValidAccountInDatabase(id, password_hash) == False):
             password = input("对不起，密码错误！请重新输入：")
             password_hash = hashlib.sha1(password.encode()).hexdigest()
-        name = Customer.getCustomerName(id)
-        print("\n")
-        print("***************************************")
-        print("************** 登录成功 ***************")
-        print("***************************************")
-        print("欢迎回来！ " + name + " 先生（小姐）～")
-        customer = Customer(id, name)
-        customer.showMenu()
     # exit
     elif (choice == 'q'):
         exit(0)
+    name = Customer.getCustomerName(id)
+    print("\n")
+    print("***************************************")
+    print("************** 登录成功 ***************")
+    print("***************************************")
+    print("欢迎回来！ " + name + " 先生（小姐）～")
+    customer = Customer(id, name)
+    customer.showMenu()

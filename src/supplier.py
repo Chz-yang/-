@@ -17,6 +17,18 @@ class Supplier():
         self.lock = threading.Lock()
         self.todoOrders = {}
 
+    def updateSales(self, order_id):
+        ''' update sales of dishes '''
+        self.cursor.execute('''UPDATE Dishes
+                               set Dishes.sales = Dishes.sales + 1
+                               where Dishes.dishes_id in(
+                                   select Orders_Dishes.dishes_id
+                                   from Orders_Dishes
+                                   where Orders_Dishes.order_id = ?
+                               )
+                            ''', order_id)
+        self.cursor.commit()
+
     def activity(self):
         print(">> 请做出选择： ")
         while True:
@@ -44,6 +56,7 @@ class Supplier():
         else:
             for orders in self.todoOrders:
                 # print(orders, orders[0], type(orders[0]))
+                self.updateSales(orders[0])
                 self.cursor.execute("UPDATE Orders set Orders.state = 'to_deliver' where Orders.order_id = " + orders[0])
                 print('>> 处理订单', orders, '成功，订单待派送！')
                 # self.cursor.execute('''

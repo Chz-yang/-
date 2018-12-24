@@ -163,7 +163,10 @@ class Supplier():
     def checkOrders(self):
         ''' check orders per 10 seconds '''
         while True:
-            time.sleep(10)
+            time.sleep(5)
+            if self.quit is True:
+                return
+            print('check orders')
             self.cursor.execute('''
                                 select *
                                 from Supp_Orders, Orders
@@ -255,5 +258,6 @@ if __name__ == '__main__':
     while True:
         if not suppl.activity():    # 主线程
             print("\n>> See you next time. ")
-            break
-    t.join()
+            t.join()
+            print('bye')
+            exit()

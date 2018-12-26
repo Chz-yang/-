@@ -128,7 +128,7 @@ if __name__ == '__main__':
     login = False   # 登录状态
     while not login:
         try:
-            option = input(">> 请输入您的选择  '1'：登录账户；'2'：注册账户；'3'：推出系统\n>> ")
+            option = input(">> 请输入您的选择  '1'：登录账户；'2'：注册账户；'3'：退出系统\n>> ")
             if option == '1':                
                 rider_id = input(">> 请输入您的ID：\n>> ")
                 password = input(">> 请输入您的密码：\n>> ")
@@ -146,30 +146,6 @@ if __name__ == '__main__':
                 RiderIDs = cursor.fetchall()
                 rider_id = str(len(RiderIDs))   # 假设ID从0开始
                 print(">> 您的ID：" + rider_id)
-                # while True: # 输入密码
-                #     password = input(">> Please input your password.\n>> ")
-                #     if password == '':
-                #         print(">> Your password cannot be empty. If you want to quit, please input 'q'. ")
-                #     elif password == 'q':
-                #         exit()
-                #     else:
-                #         break
-                # while True: # 输入名字
-                #     name = input(">> Please input your name.\n>> ")
-                #     if name == '':
-                #         print(">> Your name cannot be empty. If you want to quit, please input 'q'. ")
-                #     elif name == 'q':
-                #         exit()
-                #     else:
-                #         break
-                # while True: # 输入电话号码
-                #     telephone_no = input(">> PLease input your telephone number.\n>> ")
-                #     if telephone_no == '':
-                #         print(">> Your telephone number cannot be empty. If you want to quit, please input 'q'. ")
-                #     elif telephone_no == 'q':
-                #         exit()
-                #     else:
-                #         break
                 features = ["password", "name", "telephone number"] #输入属性
                 featuresChinese = ["密码", "名字", "电话号码"]
                 values = [None, None, None] # 输入值(密码、姓名、电话号码)
@@ -200,6 +176,8 @@ if __name__ == '__main__':
                 exit()
                     
         except IndexError:
+            print(">> 账户ID不存在！ ")
+        except pyodbc.ProgrammingError:
             print(">> 账户ID不存在！ ")
 
     rider = Rider(rider_id, password, cursor)
